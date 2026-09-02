@@ -1,6 +1,6 @@
 using DeskLite.Builder.Elements.Attributes.Base;
 
-namespace DeskLite.Builder.Elements.Base;
+namespace DeskLite.Builder.Elements.Primitives;
 
 public abstract record HtmlElement<TSelf, TAttributes> :
     IHtmlElementBase<TSelf>
