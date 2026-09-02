@@ -4,7 +4,7 @@ namespace DeskLite.Builder.Attributes.Base;
 
 public interface IHtmlAttribute<TSelf, TElement>
     where TSelf : IHtmlAttribute<TSelf, TElement>
-    where TElement : IHtmlElement<TElement>
+    where TElement : IHtmlElementBase<TElement>
 {
-    
+    string? Value { get; }
 }
