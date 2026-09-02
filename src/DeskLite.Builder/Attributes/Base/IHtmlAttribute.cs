@@ -6,5 +6,5 @@ public interface IHtmlAttribute<TSelf, TElement>
     where TSelf : IHtmlAttribute<TSelf, TElement>
     where TElement : IHtmlElementBase<TElement>
 {
-    string? Value { get; }
+    public string? Value { get; set; }
 }
