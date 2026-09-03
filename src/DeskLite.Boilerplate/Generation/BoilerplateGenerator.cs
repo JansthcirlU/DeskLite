@@ -36,7 +36,7 @@ public static class BoilerplateGenerator
                 continue;
             }
 
-            await IntermediateBuilderFileWriter.WriteAsync(elementBuilderPath, Tag, element, overwriteExistingFiles);
+            await IntermediateBuilderFileWriter.WriteAsync(elementBuilderPath, Tag, element, tags, overwriteExistingFiles);
         }
     }
 }

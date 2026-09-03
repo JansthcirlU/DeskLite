@@ -79,7 +79,7 @@ public static class BuilderFileWriter
 
                     namespace DeskLite.Builder.Builders.{{Tag}}Builders;
 
-                    internal class {{Tag}}Builder : I{{Tag}}Builder
+                    internal sealed class {{Tag}}Builder : I{{Tag}}Builder
                     {
                         private readonly {{Tag}}Attributes _attributes = new();
 
@@ -107,7 +107,7 @@ public static class BuilderFileWriter
 
                         namespace DeskLite.Builder.Builders.{{Tag}}Builders;
 
-                        internal class {{Tag}}Builder : I{{Tag}}Builder
+                        internal sealed class {{Tag}}Builder : I{{Tag}}Builder
                         {
                             private readonly {{Tag}}Attributes _attributes = new();
 
