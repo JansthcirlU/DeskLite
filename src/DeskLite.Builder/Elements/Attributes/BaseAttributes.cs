@@ -2,4 +2,4 @@ using DeskLite.Builder.Elements.Attributes.Primitives;
 
 namespace DeskLite.Builder.Elements.Attributes;
 
-public sealed record BaseAttributes : ElementAttributes<Elements.Base>;
+public sealed record BaseAttributes : ElementAttributes<Base>;
