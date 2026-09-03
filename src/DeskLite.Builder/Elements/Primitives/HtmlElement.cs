@@ -1,4 +1,4 @@
-using DeskLite.Builder.Elements.Attributes.Base;
+using DeskLite.Builder.Elements.Attributes.Primitives;
 
 namespace DeskLite.Builder.Elements.Primitives;
 

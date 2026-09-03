@@ -163,7 +163,7 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
         {
             attrContent =
                 $"""
-                using DeskLite.Builder.Elements.Attributes.Base;
+                using DeskLite.Builder.Elements.Attributes.Primitives;
 
                 namespace DeskLite.Builder.Elements.Attributes;
 
@@ -177,7 +177,7 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
             attrStringBuilder
                 .AppendLine(
                     $$"""
-                    using DeskLite.Builder.Elements.Attributes.Base;
+                    using DeskLite.Builder.Elements.Attributes.Primitives;
 
                     namespace DeskLite.Builder.Elements.Attributes;
 

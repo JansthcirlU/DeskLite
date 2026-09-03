@@ -1,4 +1,4 @@
-namespace DeskLite.Builder.Elements.Attributes.Base;
+namespace DeskLite.Builder.Elements.Attributes.Primitives;
 
 public abstract record ElementAttributes<TElement>
 {
