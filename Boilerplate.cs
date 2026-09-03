@@ -8,7 +8,7 @@ string buildersPath = Path.Combine(projectPath, "Builders");
 bool overwriteExistingFiles = true;
 
 Element[] tags = [
-    new("a", null, null),
+    new("a", null, ["download", "href", "type"]),
     new("abbr", null, null),
     new("address", null, null),
     new("area", null, null),
