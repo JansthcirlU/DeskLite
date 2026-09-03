@@ -123,7 +123,7 @@ Element[] tags = [
     new("wbr", null, null)
 ];
 
-foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head" || t.Name == "body" || t.Name == "title"))
+foreach (Element element in tags)
 {
     string tag = element.Name;
     Console.WriteLine($"Adding {tag}...");
@@ -225,12 +225,11 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
             builderInterfaceContents =
                 $$"""
                 using DeskLite.Builder.Builders.Primitives;
-                using DeskLite.Builder.Elements;
                 using DeskLite.Builder.Elements.Attributes;
 
                 namespace DeskLite.Builder.Builders.{{Tag}}Builders;
 
-                public interface I{{Tag}}Builder : IElementBuilder<I{{Tag}}Builder, {{Tag}}Attributes, {{Tag}}>
+                public interface I{{Tag}}Builder : IElementBuilder<I{{Tag}}Builder, {{Tag}}Attributes, Elements.{{Tag}}>
                 {
 
                 }
@@ -244,12 +243,11 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
                 .AppendLine(
                     $$"""
                     using DeskLite.Builder.Builders.Primitives;
-                    using DeskLite.Builder.Elements;
                     using DeskLite.Builder.Elements.Attributes;
 
                     namespace DeskLite.Builder.Builders.{{Tag}}Builders;
 
-                    public interface I{{Tag}}Builder : IElementBuilder<I{{Tag}}Builder, {{Tag}}Attributes, {{Tag}}>
+                    public interface I{{Tag}}Builder : IElementBuilder<I{{Tag}}Builder, {{Tag}}Attributes, Elements.{{Tag}}>
                     {
                     """);
             
@@ -288,7 +286,6 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
         {
             builderImplementationContents =
                 $$"""
-                using DeskLite.Builder.Elements;
                 using DeskLite.Builder.Elements.Attributes;
 
                 namespace DeskLite.Builder.Builders.{{Tag}}Builders;
@@ -303,7 +300,7 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
                         return this;
                     }
 
-                    public {{Tag}} Build()
+                    public Elements.{{Tag}} Build()
                     {
                         throw new NotImplementedException();
                     }
@@ -317,7 +314,6 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
             builderImplementationStringBuilder
                 .AppendLine(
                     $$"""
-                    using DeskLite.Builder.Elements;
                     using DeskLite.Builder.Elements.Attributes;
 
                     namespace DeskLite.Builder.Builders.{{Tag}}Builders;
@@ -356,7 +352,7 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
             builderImplementationStringBuilder    
                 .AppendLine(
                     $$"""
-                        public {{Tag}} Build()
+                        public Elements.{{Tag}} Build()
                         {
                             throw new NotImplementedException();
                         }
@@ -393,12 +389,11 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
                 $$"""
                 using DeskLite.Builder.Builders.{{Property}}Builders;
                 using DeskLite.Builder.Builders.Primitives;
-                using DeskLite.Builder.Elements;
                 using DeskLite.Builder.Elements.Attributes;
 
                 namespace DeskLite.Builder.Builders.{{Tag}}Builders;
 
-                public interface I{{Tag}}{{Property}}Builder : IIntermediateBuilder<I{{Tag}}Builder, {{Tag}}Attributes, {{Tag}}, I{{Property}}Builder, {{Property}}Attributes, {{Property}}>
+                public interface I{{Tag}}{{Property}}Builder : IIntermediateBuilder<I{{Tag}}Builder, {{Tag}}Attributes, Elements.{{Tag}}, I{{Property}}Builder, {{Property}}Attributes, Elements.{{Property}}>
                 {
 
                 }
@@ -415,7 +410,6 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
                 $$"""
                 using DeskLite.Builder.Builders.{{Property}}Builders;
                 using DeskLite.Builder.Builders.Primitives;
-                using DeskLite.Builder.Elements;
                 using DeskLite.Builder.Elements.Attributes;
 
                 namespace DeskLite.Builder.Builders.{{Tag}}Builders;
@@ -432,10 +426,10 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
                         throw new NotImplementedException();
                     }
 
-                    public IElementBuilder<I{{Property}}Builder, {{Property}}Attributes, {{Property}}> AsBuilder()
+                    public IElementBuilder<I{{Property}}Builder, {{Property}}Attributes, Elements.{{Property}}> AsBuilder()
                         => this;
 
-                    public {{Property}} Build()
+                    public Elements.{{Property}} Build()
                     {
                         throw new NotImplementedException();
                     }
