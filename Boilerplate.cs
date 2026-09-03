@@ -56,7 +56,7 @@ Element[] tags = [
     new("header", null, null),
     new("hgroup", null, null),
     new("hr", null, null),
-    new("html", ["head", "body"], ["xmlns"]),
+    new("html", ["head", "body"], ["version", "xmlns"]),
     new("i", null, null),
     new("iframe", null, null),
     new("img", null, null),
@@ -157,16 +157,57 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
     string attr = Path.Combine(attributesPath, $"{Tag}Attributes.cs");
     if (!File.Exists(attr) || overwriteExistingFiles)
     {
+        string attrContent;
+
+        if (element.Attributes is null)
+        {
+            attrContent =
+                $"""
+                using DeskLite.Builder.Elements.Attributes.Base;
+
+                namespace DeskLite.Builder.Elements.Attributes;
+
+                public sealed record {Tag}Attributes : ElementAttributes<{Tag}>;
+
+                """;
+        }
+        else
+        {
+            StringBuilder attrStringBuilder = new();
+            attrStringBuilder
+                .AppendLine(
+                    $$"""
+                    using DeskLite.Builder.Elements.Attributes.Base;
+
+                    namespace DeskLite.Builder.Elements.Attributes;
+
+                    public sealed record {{Tag}}Attributes : ElementAttributes<{{Tag}}>
+                    {
+                    """);
+            
+            foreach (string a in element.Attributes)
+            {
+                string? A = a.Capitalize();
+                if (A is null)
+                {
+                    continue;
+                }
+
+                attrStringBuilder.AppendLine($"    public string? {A} {{ get; set; }}");
+            }
+
+            attrStringBuilder
+                .AppendLine(
+                    """
+                    }
+                    """);
+            
+            attrContent = attrStringBuilder.ToString();
+        }
+
         await File.WriteAllTextAsync(
             attr,
-            $"""
-            using DeskLite.Builder.Elements.Attributes.Base;
-
-            namespace DeskLite.Builder.Elements.Attributes;
-
-            public sealed record {Tag}Attributes : ElementAttributes<{Tag}>;
-
-            """);
+            attrContent);
     }
 
     string elementBuilderPath = Path.Combine(buildersPath, $"{Tag}Builders");
@@ -228,7 +269,6 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
                 .AppendLine(
                     """
                     }
-
                     """);
             builderInterfaceContents = builderInterfaceStringBuilder.ToString();
         }
@@ -291,6 +331,7 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
                             attributes(_attributes);
                             return this;
                         }
+
                     """);
             
             foreach (string property in element.Properties)
@@ -308,6 +349,7 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
                             {
                                 throw new NotImplementedException();
                             }
+
                         """);
             }
 
@@ -319,7 +361,6 @@ foreach (Element element in tags.Where(t => t.Name == "html" || t.Name == "head"
                             throw new NotImplementedException();
                         }
                     }
-
                     """);
             
             builderImplementationContents = builderImplementationStringBuilder.ToString();
