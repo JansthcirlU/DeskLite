@@ -124,7 +124,14 @@ foreach (string tag in tags[..2])
 {
     Console.WriteLine($"Adding {tag}...");
 
-    string elem = Path.Combine(elementsPath, $"{Capitalize(tag)}.cs");
+    string? Tag = tag.Capitalize();
+
+    if (string.IsNullOrWhiteSpace(Tag))
+    {
+        continue;
+    }
+
+    string elem = Path.Combine(elementsPath, $"{Tag}.cs");
     if (!File.Exists(elem))
     {
         await File.WriteAllTextAsync(
@@ -135,11 +142,11 @@ foreach (string tag in tags[..2])
 
             namespace DeskLite.Builder.Elements;
 
-            public record {Capitalize(tag)}() : HtmlElement<{Capitalize(tag)}, {Capitalize(tag)}Attributes>("{tag}");
+            public record {Tag}() : HtmlElement<{Tag}, {Tag}Attributes>("{tag}");
             """);
     }
     
-    string attr = Path.Combine(attributesPath, $"{Capitalize(tag)}Attributes.cs");
+    string attr = Path.Combine(attributesPath, $"{Tag}Attributes.cs");
     if (!File.Exists(attr))
     {
         await File.WriteAllTextAsync(
@@ -149,41 +156,77 @@ foreach (string tag in tags[..2])
 
             namespace DeskLite.Builder.Elements.Attributes;
 
-            public sealed record {Capitalize(tag)}Attributes : ElementAttributes<{Capitalize(tag)}>;
+            public sealed record {Tag}Attributes : ElementAttributes<{Tag}>;
             """);
     }
 
-    string elementBuilderPath = Path.Combine(buildersPath, $"{Capitalize(tag)}Builders");
+    string elementBuilderPath = Path.Combine(buildersPath, $"{Tag}Builders");
     if (!Directory.Exists(elementBuilderPath))
     {
         Directory.CreateDirectory(elementBuilderPath);
     }
 
-    string build = Path.Combine(elementBuilderPath, $"I{Capitalize(tag)}Builder.cs");
-    if (!File.Exists(build))
+    string builderInterface = Path.Combine(elementBuilderPath, $"I{Tag}Builder.cs");
+    if (!File.Exists(builderInterface))
     {
         await File.WriteAllTextAsync(
-            build,
+            builderInterface,
             $$"""
             using DeskLite.Builder.Builders.Primitives;
             using DeskLite.Builder.Elements;
             using DeskLite.Builder.Elements.Attributes;
 
-            namespace DeskLite.Builder.Builders.{{Capitalize(tag)}}Builders;
+            namespace DeskLite.Builder.Builders.{{Tag}}Builders;
 
-            public interface I{{Capitalize(tag)}}Builder : IElementBuilder<I{{Capitalize(tag)}}Builder, {{Capitalize(tag)}}Attributes, {{Capitalize(tag)}}>
+            public interface I{{Tag}}Builder : IElementBuilder<I{{Tag}}Builder, {{Tag}}Attributes, {{Tag}}>
             {
 
+            }
+            """);
+        
+    }
+
+    string builderImplementation = Path.Combine(elementBuilderPath, $"{Tag}Builder.cs");
+    if (!File.Exists(builderImplementation))
+    {
+        await File.WriteAllTextAsync(
+            builderImplementation,
+            $$"""
+            using DeskLite.Builder.Elements;
+            using DeskLite.Builder.Elements.Attributes;
+
+            namespace DeskLite.Builder.Builders.{{Tag}}Builders;
+
+            internal class {{Tag}}Builder : I{{Tag}}Builder
+            {
+                private readonly {{Tag}}Attributes _attributes = new();
+
+                public I{{Tag}}Builder Attributes(Action<{{Tag}}Attributes> attributes)
+                {
+                    attributes(_attributes);
+                    return this;
+                }
+
+                public {{Tag}} Build()
+                {
+                    throw new NotImplementedException();
+                }
             }
             """);
     }
 }
 
-static string? Capitalize(string? s)
-    => s switch
+public static class StringExtensions
+{
+    extension(string? s)
     {
-        null => null,
-        "" => "",
-        string character when character.Length == 1 => character[0].ToString().ToUpperInvariant(),
-        string longer => longer[0].ToString().ToUpperInvariant() + longer[1..]
-    };
+        public string? Capitalize()
+            => s switch
+            {
+                null => null,
+                "" => "",
+                string character when character.Length == 1 => character[0].ToString().ToUpperInvariant(),
+                string longer => longer[0].ToString().ToUpperInvariant() + longer[1..]
+            };
+    }
+}
