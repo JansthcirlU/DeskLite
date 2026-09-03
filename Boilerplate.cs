@@ -1,7 +1,8 @@
 
-string builderPath = Path.Combine("src", "DeskLite.Builder");
-string elementsPath = Path.Combine(builderPath, "Elements");
+string projectPath = Path.Combine("src", "DeskLite.Builder");
+string elementsPath = Path.Combine(projectPath, "Elements");
 string attributesPath = Path.Combine(elementsPath, "Attributes");
+string buildersPath = Path.Combine(projectPath, "Builders");
 
 string[] tags = [
     "a",
@@ -119,7 +120,7 @@ string[] tags = [
     "wbr"
 ];
 
-foreach (string tag in tags)
+foreach (string tag in tags[..2])
 {
     Console.WriteLine($"Adding {tag}...");
 
@@ -149,6 +150,31 @@ foreach (string tag in tags)
             namespace DeskLite.Builder.Elements.Attributes;
 
             public sealed record {Capitalize(tag)}Attributes : ElementAttributes<{Capitalize(tag)}>;
+            """);
+    }
+
+    string elementBuilderPath = Path.Combine(buildersPath, $"{Capitalize(tag)}Builders");
+    if (!Directory.Exists(elementBuilderPath))
+    {
+        Directory.CreateDirectory(elementBuilderPath);
+    }
+
+    string build = Path.Combine(elementBuilderPath, $"I{Capitalize(tag)}Builder.cs");
+    if (!File.Exists(build))
+    {
+        await File.WriteAllTextAsync(
+            build,
+            $$"""
+            using DeskLite.Builder.Builders.Primitives;
+            using DeskLite.Builder.Elements;
+            using DeskLite.Builder.Elements.Attributes;
+
+            namespace DeskLite.Builder.Builders.{{Capitalize(tag)}}Builders;
+
+            public interface I{{Capitalize(tag)}}Builder : IElementBuilder<I{{Capitalize(tag)}}Builder, {{Capitalize(tag)}}Attributes, {{Capitalize(tag)}}>
+            {
+
+            }
             """);
     }
 }
