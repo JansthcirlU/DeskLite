@@ -8,5 +8,6 @@ public interface IElementBuilder<TSelf, TAttributes, TResult>
     where TAttributes : ElementAttributes<TResult>, new()
     where TResult : HtmlElement<TResult, TAttributes>
 {
+    TSelf Attributes(Action<TAttributes> attributes);
     TResult Build();
 }
